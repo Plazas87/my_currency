@@ -1,0 +1,1 @@
+"""Primary driven Adapters package."""
