@@ -32,6 +32,7 @@ ALLOWED_HOSTS: List[str] = []
 # Application definition
 THIRD_PARTY_APPS: List[str] = [
     "my_currency.controllers.apps.users.apps.UsersConfig",
+    "my_currency.controllers.apps.currencies.apps.CurrenciesConfig",
 ]
 
 LOCAL_APPS: List[str] = []
