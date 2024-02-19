@@ -94,7 +94,7 @@ class CurrencyExchangeRateEvaluationDate:
 class CurrencyExchangeRateRateValue:
     """CurrencyExchangeRateRateValue value object."""
 
-    value: str
+    value: Decimal
 
     def __post_init__(self) -> None:
         """Post init validations."""

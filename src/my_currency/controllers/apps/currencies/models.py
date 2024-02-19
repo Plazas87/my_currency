@@ -14,7 +14,7 @@ class Currency(models.Model):
         primary_key=True, default=uuid.uuid4, unique=True, editable=False
     )
     code = models.CharField(max_length=3, unique=True)
-    name = models.CharField(max_length=20, db_index=True)
+    name = models.CharField(max_length=30, db_index=True)
     symbol = models.CharField(max_length=3)
 
     class Meta:

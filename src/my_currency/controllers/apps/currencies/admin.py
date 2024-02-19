@@ -27,5 +27,5 @@ class CurrencyExchangeRateAdmin(admin.ModelAdmin):
         return qs.filter(category__workspace__owner=request.user)
 
 
-admin.site.register(Currency, CurrencyAdmin)
-admin.site.register(CurrencyExchangeRate, CurrencyExchangeRateAdmin)
+admin.site.register(Currency)
+admin.site.register(CurrencyExchangeRate)
