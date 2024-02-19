@@ -23,36 +23,38 @@ class CurrencyExchangeRateRepository(IRepository[CurrencyExchangeRateDTO, UUID, 
 
     def save(self, obj: CurrencyExchangeRateDTO) -> None:
         """Save an obj in the database."""
-        raise NotImplementedError
+        currencies = [obj.source_currency, obj.exchange_currency]
+        saved_currencies = []
+
+        for currency in currencies:
+            saved_currency, _ = Currency.objects.update_or_create(
+                id=currency.id,
+                defaults={
+                    "symbol": currency.symbol,
+                    "name": currency.name,
+                    "code": currency.code,
+                    "id": currency.id,
+                },
+            )
+            saved_currencies.append(saved_currency)
+
+        CurrencyExchangeRate.objects.update_or_create(
+            source_currency=obj.source_currency.id,
+            exchange_currency=obj.exchange_currency.id,
+            valuation_date=obj.valuation_date,
+            defaults={
+                "id": obj.id,
+                "source_currency": saved_currencies[0],
+                "exchange_currency": saved_currencies[1],
+                "valuation_date": obj.valuation_date,
+                "rate_value": obj.rate_value,
+            },
+        )
 
     def save_bulk(self, objs: List[CurrencyExchangeRateDTO]) -> None:
         """Save many instacnces at once."""
-        currencies_to_save = []
-        exchange_currency_rates_to_save = []
-
-        source_currency_to_save = self._create_currency_from_currency_dto(
-            currency_dto=objs[0].source_currency
-        )
-        currencies_to_save.append(source_currency_to_save)
-
-        for currency_exchange_rate in objs:
-            exchange_currency_to_save = self._create_currency_from_currency_dto(
-                currency_dto=currency_exchange_rate.exchange_currency
-            )
-            currencies_to_save.append(exchange_currency_to_save)
-
-            exchange_currency_rates_to_save.append(
-                CurrencyExchangeRate(
-                    id=currency_exchange_rate.id,
-                    source_currency=source_currency_to_save,
-                    exchange_currency=exchange_currency_to_save,
-                    valuation_date=currency_exchange_rate.valuation_date,
-                    rate_value=currency_exchange_rate.rate_value,
-                )
-            )
-
-        Currency.objects.bulk_create(currencies_to_save)
-        CurrencyExchangeRate.objects.bulk_create(exchange_currency_rates_to_save)
+        for obj in objs:
+            self.save(obj=obj)
 
     def _create_currency_from_currency_dto(self, currency_dto: CurrencyDTO) -> Currency:
         courrency_as_dict = asdict(currency_dto)
