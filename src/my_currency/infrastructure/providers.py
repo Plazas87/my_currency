@@ -1,6 +1,7 @@
 """Providers implementation module."""
 
 import logging
+import random
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Type
 
@@ -197,3 +198,71 @@ class FixerProvider(IProvider[str, ExchangeRatesResponse, ProviderPriority]):
             query_params.update({"symbols": exchange_courrency})
 
         return query_params
+
+
+class MockProvider(IProvider[str, ExchangeRatesResponse, ProviderPriority]):
+    """Mock Provider implementation."""
+
+    _request_executor: IExecutor[HTTPRequest, HTTPResponse]
+    _name: str
+    _priority: ProviderPriority
+    _method: str
+    _url: str
+    _access_key: str
+    _available_symbols: List[str]
+
+    def __init__(
+        self,
+        request_executor: IExecutor[HTTPRequest, HTTPResponse],
+        name: str,
+        priority: ProviderPriority,
+        method: str,
+        url: str,
+        access_key: str,
+        available_symbols: List[str],
+    ) -> None:
+        """Class constructor."""
+        self._request_executor = request_executor
+        self._name = name
+        self._priority = priority
+        self._method = method
+        self._url = url
+        self._access_key = access_key
+        self._available_symbols = available_symbols
+
+    @property
+    def priority(self) -> ProviderPriority:
+        """Return the provider priority."""
+        return self._priority
+
+    def get_currencies(
+        self,
+        source_currency: str,
+        valuation_date: str,
+        exchange_courrency: Optional[str] = None,
+    ) -> List[ExchangeRatesResponse]:
+        """Get latest currencies."""
+        rates: List[ExchangeRatesResponse] = []
+
+        # Generate random rates
+        rates = [
+            self._generate_random_rate(
+                exchange_currency=symbol, valuation_date=valuation_date
+            )
+            for symbol in self._available_symbols
+        ]
+
+        return rates
+
+    def _generate_random_rate(
+        self, exchange_currency: str, valuation_date: str
+    ) -> ExchangeRatesResponse:
+        source_currency = "EUR"  # Assuming source currency is always EUR
+        rate_value = random.uniform(0.5, 1.5)
+
+        return ExchangeRatesResponse(
+            source_currency=source_currency,
+            exchange_currency=exchange_currency,
+            valuation_date=valuation_date,
+            rate_value=rate_value,
+        )

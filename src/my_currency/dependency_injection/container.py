@@ -23,7 +23,11 @@ from my_currency.infrastructure.finders import (
     CurrencyFinder,
     ProvidersFinder,
 )
-from my_currency.infrastructure.providers import FixerProvider, ProviderManager
+from my_currency.infrastructure.providers import (
+    FixerProvider,
+    MockProvider,
+    ProviderManager,
+)
 from my_currency.infrastructure.repositories import CurrencyExchangeRateRepository
 from my_currency.infrastructure.serializers import ExchangeRatesResponseSerializer
 
@@ -48,7 +52,7 @@ exchange_rates_finder = CurrencyExchangeRateFinder()
 provider_finder = ProvidersFinder()
 exchange_rates_response_serializer = ExchangeRatesResponseSerializer()
 
-external_exchange_rates_providers = {"Fixer": FixerProvider}
+external_exchange_rates_providers = {"Fixer": FixerProvider, "Mock": MockProvider}
 
 provider_manager = ProviderManager(
     providers=external_exchange_rates_providers,

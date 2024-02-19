@@ -99,6 +99,8 @@ class GetCurrencyRatesByPeriodCommandHandler(
                             command=command, dates=dates, provider=provider
                         )
                     )
+                    if exchange_rates:
+                        break
 
                 except Exception as error:
                     logger.warning(
