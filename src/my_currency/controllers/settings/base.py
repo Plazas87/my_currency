@@ -30,12 +30,14 @@ APPS_DIR = BASE_DIR / "apps"
 ALLOWED_HOSTS: List[str] = []
 
 # Application definition
-THIRD_PARTY_APPS: List[str] = [
+THIRD_PARTY_APPS: List[str] = ["rest_framework"]
+
+LOCAL_APPS: List[str] = [
     "my_currency.controllers.apps.users.apps.UsersConfig",
     "my_currency.controllers.apps.currencies.apps.CurrenciesConfig",
+    "my_currency.controllers.apps.providers.apps.ProvidersConfig",
 ]
 
-LOCAL_APPS: List[str] = []
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -149,3 +151,16 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ],
+}
+
+# REQUESTS EXECUTOR
+AVAILABLE_HTTP_METHODS = [("GET", "GET request."), ("POST", "POST request.")]
+AVAILABLE_EXCHANGE_SYMBOLS = ["EUR", "CHF", "USD", "GBP"]
