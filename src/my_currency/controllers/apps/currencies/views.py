@@ -51,13 +51,3 @@ class GetCurrenciesByPeriodView(APIView):
             )
 
         return Response(asdict(HTTPResponse(**response_data)))
-
-
-# Create your views here.
-
-
-# {
-#     "source_currency": "EUR",
-#     "date_from":"2024-02-10" ,
-#     "date_to": "2024-02-11"
-# }
