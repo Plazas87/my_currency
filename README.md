@@ -129,19 +129,10 @@ poetry install
 Create and initialize the local database:
 
 ```bash
-docker run -d --name local_seb_db \
-    -v seb_data:/var/lib/postgresql/data \
-    -p 5432:5432 \
-    -e POSTGRES_HOST_AUTH_METHOD=trust \
-    postgres:15
-
-# Or, using make
 make initdb
 ```
 
 ```bash
-docker exec -it seb_db createdb -U postgres seb
-# Or, using make
 make createdb
 ```
 
